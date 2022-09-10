@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="MediatR" Version="10.0.1" />
+      <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\ConnorWyatt.EventStoreExample.Mongo\ConnorWyatt.EventStoreExample.Mongo.csproj" />
+      <ProjectReference Include="..\ConnorWyatt.EventStoreExample.Shared\ConnorWyatt.EventStoreExample.Shared.csproj" />
+    </ItemGroup>
+
+</Project>

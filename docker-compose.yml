@@ -1,0 +1,46 @@
+services:
+  eventstore:
+    image: ghcr.io/eventstore/eventstore:22.6.0-alpha-arm64v8
+    environment:
+      - EVENTSTORE_CLUSTER_SIZE=1
+      - EVENTSTORE_RUN_PROJECTIONS=All
+      - EVENTSTORE_START_STANDARD_PROJECTIONS=true
+      - EVENTSTORE_EXT_TCP_PORT=1113
+      - EVENTSTORE_HTTP_PORT=2113
+      - EVENTSTORE_INSECURE=true
+      - EVENTSTORE_ENABLE_EXTERNAL_TCP=true
+      - EVENTSTORE_ENABLE_ATOM_PUB_OVER_HTTP=true
+    ports:
+      - "1113:1113"
+      - "2113:2113"
+    volumes:
+      - type: volume
+        source: eventstore-volume-data
+        target: /var/lib/eventstore
+      - type: volume
+        source: eventstore-volume-logs
+        target: /var/log/eventstore
+  mongodb:
+    image: mongo:6.0.1
+#    hostname: mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=password
+    ports:
+      - "27017:27017"
+#    entrypoint: ["/usr/bin/mongod", "--replSet", "rs0", "--bind_ip_all", "--keyFile", "/opt/keyfile/keyfile"]
+#    healthcheck:
+#      test: test $$(echo "rs.initiate({_id:'rs0',members:[{_id:0,host:\"mongo:27017\"}]}).ok || rs.status().ok" | mongo --port 27017 --quiet) -eq 1
+#      interval: 10s
+#      start_period: 30s
+    volumes:
+#      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js
+#      - ./mongo-keyfile:/opt/keyfile/keyfile
+      - type: volume
+        source: mongodb-volume-data
+        target: /data/db
+
+volumes:
+  eventstore-volume-data:
+  eventstore-volume-logs:
+  mongodb-volume-data:

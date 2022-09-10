@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConnorWyatt.EventStoreExample", "ConnorWyatt.EventStoreExample\ConnorWyatt.EventStoreExample.csproj", "{F755A922-F22E-441F-AB16-B6F9117C869E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConnorWyatt.EventStoreExample.Shared", "ConnorWyatt.EventStoreExample.Shared\ConnorWyatt.EventStoreExample.Shared.csproj", "{6F5D8CBF-C8F9-41EA-9C7D-7838E0A3C503}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConnorWyatt.EventStoreExample.Mongo", "ConnorWyatt.EventStoreExample.Mongo\ConnorWyatt.EventStoreExample.Mongo.csproj", "{B39F3E5E-C6C8-4E11-8638-DAA9714F3DA9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F755A922-F22E-441F-AB16-B6F9117C869E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F755A922-F22E-441F-AB16-B6F9117C869E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F755A922-F22E-441F-AB16-B6F9117C869E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F755A922-F22E-441F-AB16-B6F9117C869E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F5D8CBF-C8F9-41EA-9C7D-7838E0A3C503}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F5D8CBF-C8F9-41EA-9C7D-7838E0A3C503}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F5D8CBF-C8F9-41EA-9C7D-7838E0A3C503}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F5D8CBF-C8F9-41EA-9C7D-7838E0A3C503}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B39F3E5E-C6C8-4E11-8638-DAA9714F3DA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B39F3E5E-C6C8-4E11-8638-DAA9714F3DA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B39F3E5E-C6C8-4E11-8638-DAA9714F3DA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B39F3E5E-C6C8-4E11-8638-DAA9714F3DA9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
