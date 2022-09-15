@@ -6,7 +6,7 @@ namespace ConnorWyatt.EventStoreExample.Shared.Subscriptions;
 public record SubscriptionCursor(
   [property: BsonId]
   string Id,
-  string StreamName,
   string SubscriberName,
+  string StreamName,
   ulong Position,
   Instant LastUpdated);

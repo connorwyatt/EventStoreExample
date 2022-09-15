@@ -5,7 +5,8 @@ using ConnorWyatt.EventStoreExample.Shared.Subscriptions;
 
 namespace ConnorWyatt.EventStoreExample.Products.Projections;
 
-[Subscription("$ce-products", "ProductsProjection")]
+[SubscriberName("ProductsProjection")]
+[Subscription("$ce-products")]
 public class ProductsProjection : SubscriberBase
 {
   private readonly MongoProductsRepository _productsRepository;
@@ -18,9 +19,9 @@ public class ProductsProjection : SubscriberBase
     When<ProductUpdated>(UpdateProduct);
   }
 
-  private async Task AddProduct(EventEnvelope<ProductAdded> eventEnvelope)
+  private async Task AddProduct(ProductAdded @event, EventMetadata metadata)
   {
-    var product = await _productsRepository.GetProduct(eventEnvelope.Event.ProductId);
+    var product = await _productsRepository.GetProduct(@event.ProductId);
 
     if (product != null)
     {
@@ -29,28 +30,28 @@ public class ProductsProjection : SubscriberBase
 
     await _productsRepository.InsertProduct(
       new Product(
-        eventEnvelope.Event.ProductId,
-        eventEnvelope.Event.Name,
-        eventEnvelope.Event.Description,
-        eventEnvelope.Metadata.Timestamp,
-        eventEnvelope.Metadata.Timestamp,
+        @event.ProductId,
+        @event.Name,
+        @event.Description,
+        metadata.Timestamp,
+        metadata.Timestamp,
         0));
   }
 
-  private async Task UpdateProduct(EventEnvelope<ProductUpdated> eventEnvelope)
+  private async Task UpdateProduct(ProductUpdated @event, EventMetadata metadata)
   {
-    var product = await _productsRepository.GetProduct(eventEnvelope.Event.ProductId);
+    var product = await _productsRepository.GetProduct(@event.ProductId);
 
-    if (product == null || !TryUpdateVersion(product, eventEnvelope.Metadata.StreamPosition, out product))
+    if (product == null || !TryUpdateVersion(product, metadata.StreamPosition, out product))
     {
       return;
     }
 
     product = product with
     {
-      Name = eventEnvelope.Event.Name,
-      Description = eventEnvelope.Event.Description,
-      UpdatedAt = eventEnvelope.Metadata.Timestamp,
+      Name = @event.Name,
+      Description = @event.Description,
+      UpdatedAt = metadata.Timestamp,
     };
 
     await _productsRepository.UpdateProduct(product);

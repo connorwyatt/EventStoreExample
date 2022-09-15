@@ -1,15 +1,9 @@
 namespace ConnorWyatt.EventStoreExample.Shared.Subscriptions;
 
-[AttributeUsage(AttributeTargets.Class)]
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
 public class SubscriptionAttribute : Attribute
 {
   public string StreamName { get; }
 
-  public string SubscriberName { get; }
-
-  public SubscriptionAttribute(string streamName, string subscriberName)
-  {
-    StreamName = streamName;
-    SubscriberName = subscriberName;
-  }
+  public SubscriptionAttribute(string streamName) => StreamName = streamName;
 }

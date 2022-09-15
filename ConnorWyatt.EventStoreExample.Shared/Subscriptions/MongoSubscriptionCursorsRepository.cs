@@ -18,20 +18,20 @@ public class MongoSubscriptionCursorsRepository
     _clock = clock;
   }
 
-  public async Task<SubscriptionCursor?> GetSubscriptionCursor(string streamName, string subscriberName)
+  public async Task<SubscriptionCursor?> GetSubscriptionCursor(string subscriberName, string streamName)
   {
-    return await _collection.Find(sc => sc.StreamName == streamName && sc.SubscriberName == subscriberName)
+    return await _collection.Find(sc => sc.SubscriberName == subscriberName && sc.StreamName == streamName)
       .SingleOrDefaultAsync();
   }
 
-  public async Task UpsertSubscriptionCursor(string streamName, string subscriberName, ulong position)
+  public async Task UpsertSubscriptionCursor(string subscriberName, string streamName, ulong position)
   {
     await _collection.FindOneAndReplaceAsync<SubscriptionCursor>(
-      sc => sc.StreamName == streamName && sc.SubscriberName == subscriberName,
+      sc => sc.SubscriberName == subscriberName && sc.StreamName == streamName,
       new SubscriptionCursor(
-        GetId(streamName, subscriberName),
-        streamName,
+        GetId(subscriberName, streamName),
         subscriberName,
+        streamName,
         position,
         _clock.GetCurrentInstant()),
       new FindOneAndReplaceOptions<SubscriptionCursor>
@@ -40,5 +40,5 @@ public class MongoSubscriptionCursorsRepository
       });
   }
 
-  private string GetId(string streamName, string subscriberName) => $"{streamName}:{subscriberName}";
+  private string GetId(string subscriberName, string streamName) => $"{subscriberName}:{streamName}";
 }

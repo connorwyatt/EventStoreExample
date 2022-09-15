@@ -2,14 +2,14 @@ namespace ConnorWyatt.EventStoreExample.Shared.Events;
 
 public class EventHandler
 {
-  private readonly IDictionary<string, Func<EventEnvelope<IEvent>, Task>> _handlers =
-    new Dictionary<string, Func<EventEnvelope<IEvent>, Task>>();
+  private readonly IDictionary<string, Func<IEvent, EventMetadata, Task>> _handlers =
+    new Dictionary<string, Func<IEvent, EventMetadata, Task>>();
 
-  protected void When<T>(Func<EventEnvelope<T>, Task> handler) where T : class, IEvent
+  protected void When<T>(Func<T, EventMetadata, Task> handler) where T : class, IEvent
   {
     _handlers.Add(
       EventUtilities.GetType<T>(),
-      async e => await handler(new EventEnvelope<T>((T)e.Event, e.Metadata)));
+      async (@event, metadata) => await handler((T)@event, metadata));
   }
 
   protected Task HandleEvent<T>(EventEnvelope<T> eventEnvelope) where T : class, IEvent
@@ -19,7 +19,7 @@ public class EventHandler
       throw new InvalidOperationException();
     }
 
-    return ((Func<EventEnvelope<T>, Task>)handler).Invoke(eventEnvelope);
+    return ((Func<T, EventMetadata, Task>)handler).Invoke(eventEnvelope.Event, eventEnvelope.Metadata);
   }
 
   protected bool CanHandleEvent<T>(EventEnvelope<T> eventEnvelope) where T : class, IEvent =>

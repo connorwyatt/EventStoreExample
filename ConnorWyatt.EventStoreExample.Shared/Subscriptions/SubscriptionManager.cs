@@ -9,7 +9,7 @@ public class SubscriptionManager
   private readonly EventStoreWrapper _eventStoreWrapper;
   private readonly MongoSubscriptionCursorsRepository _subscriptionCursorsRepository;
   private readonly ISubscriber _subscriber;
-  private StreamSubscription? _subscription;
+  private readonly IList<StreamSubscription> _streamSubscriptions = new List<StreamSubscription>();
 
   public SubscriptionManager(
     EventStoreWrapper eventStoreWrapper,
@@ -23,45 +23,59 @@ public class SubscriptionManager
 
   public async Task StartAsync(CancellationToken cancellationToken)
   {
-    var currentStreamPosition = await GetCursor();
+    var subscriptionAttributes = SubscriberUtilities.GetSubscriptionAttributes(_subscriber.GetType());
 
-    _subscription = await _eventStoreWrapper.SubscribeToStreamAsync(
-      SubscriberUtilities.GetStreamName(_subscriber.GetType()),
-      currentStreamPosition.HasValue ? FromStream.After(currentStreamPosition.Value) : FromStream.Start,
-      async (_, @event, _) =>
-      {
-        await _subscriber.HandleEvent(@event);
-        await UpdateCursor(@event);
-      },
-      true,
-      cancellationToken);
+    var streamNames = subscriptionAttributes
+      .Select(subscriptionAttribute => subscriptionAttribute.StreamName)
+      .Distinct();
+
+    foreach (var streamName in streamNames)
+    {
+      var currentStreamPosition = await GetCursor(streamName);
+
+      var streamSubscription = await _eventStoreWrapper.SubscribeToStreamAsync(
+        streamName,
+        currentStreamPosition.HasValue ? FromStream.After(currentStreamPosition.Value) : FromStream.Start,
+        async (_, @event, _) =>
+        {
+          await _subscriber.HandleEvent(@event);
+          await UpdateCursor(streamName, @event);
+        },
+        true,
+        cancellationToken);
+
+      _streamSubscriptions.Add(streamSubscription);
+    }
   }
 
   public Task StopAsync(CancellationToken cancellationToken)
   {
-    _subscription?.Dispose();
+    foreach (var streamSubscription in _streamSubscriptions)
+    {
+      streamSubscription.Dispose();
+    }
 
     return Task.CompletedTask;
   }
 
-  private async Task<ulong?> GetCursor()
+  private async Task<ulong?> GetCursor(string streamName)
   {
     var subscriberType = _subscriber.GetType();
 
     var subscriptionCursor = await _subscriptionCursorsRepository.GetSubscriptionCursor(
-      SubscriberUtilities.GetStreamName(subscriberType),
-      SubscriberUtilities.GetSubscriberName(subscriberType));
+      SubscriberUtilities.GetSubscriberName(subscriberType),
+      streamName);
 
     return subscriptionCursor?.Position;
   }
 
-  private async Task UpdateCursor(EventEnvelope<IEvent> @event)
+  private async Task UpdateCursor(string streamName, EventEnvelope<IEvent> @event)
   {
     var subscriberType = _subscriber.GetType();
 
     await _subscriptionCursorsRepository.UpsertSubscriptionCursor(
-      SubscriberUtilities.GetStreamName(subscriberType),
       SubscriberUtilities.GetSubscriberName(subscriberType),
+      streamName,
       @event.Metadata.AggregatedStreamPosition);
   }
 }
