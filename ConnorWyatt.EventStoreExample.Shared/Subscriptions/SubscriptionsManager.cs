@@ -1,17 +1,16 @@
-using ConnorWyatt.EventStoreExample.Shared.Events;
-using EventStore.Client;
+using ConnorWyatt.EventStoreExample.Shared.EventStore;
 using Microsoft.Extensions.Hosting;
 
 namespace ConnorWyatt.EventStoreExample.Shared.Subscriptions;
 
 public class SubscriptionsManager : IHostedService
 {
-  private readonly EventStore.EventStoreWrapper _eventStoreWrapper;
+  private readonly EventStoreWrapper _eventStoreWrapper;
   private readonly IEnumerable<ISubscriber> _subscribers;
 
   private IList<SubscriptionManager> _subscriptionManagers = new List<SubscriptionManager>();
 
-  public SubscriptionsManager(EventStore.EventStoreWrapper eventStoreWrapper, IEnumerable<ISubscriber> subscribers)
+  public SubscriptionsManager(EventStoreWrapper eventStoreWrapper, IEnumerable<ISubscriber> subscribers)
   {
     _eventStoreWrapper = eventStoreWrapper;
     _subscribers = subscribers;

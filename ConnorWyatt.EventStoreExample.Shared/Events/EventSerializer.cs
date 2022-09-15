@@ -10,10 +10,7 @@ public class EventSerializer
 {
   private readonly ImmutableDictionary<string, Type> _eventTypeLookup;
 
-  public EventSerializer(Assembly assembly)
-  {
-    _eventTypeLookup = GetEventTypeLookup(assembly);
-  }
+  public EventSerializer(Assembly assembly) => _eventTypeLookup = GetEventTypeLookup(assembly);
 
   public byte[] Serialize(IEvent @event)
   {

@@ -17,10 +17,7 @@ public abstract class SubscriberBase : EventHandler, ISubscriber
     await base.HandleEvent(eventEnvelope);
   }
 
-  public Task<ulong?> GetCursor()
-  {
-    return Task.FromResult(_cursor);
-  }
+  public Task<ulong?> GetCursor() => Task.FromResult(_cursor);
 
   public Task UpdateCursor(EventEnvelope<IEvent> eventEnvelope)
   {

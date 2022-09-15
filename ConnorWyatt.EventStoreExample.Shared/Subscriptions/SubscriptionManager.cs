@@ -1,14 +1,15 @@
+using ConnorWyatt.EventStoreExample.Shared.EventStore;
 using EventStore.Client;
 
 namespace ConnorWyatt.EventStoreExample.Shared.Subscriptions;
 
 public class SubscriptionManager
 {
-  private readonly EventStore.EventStoreWrapper _eventStoreWrapper;
+  private readonly EventStoreWrapper _eventStoreWrapper;
   private readonly ISubscriber _subscriber;
   private StreamSubscription? _subscription;
 
-  public SubscriptionManager(EventStore.EventStoreWrapper eventStoreWrapper, ISubscriber subscriber)
+  public SubscriptionManager(EventStoreWrapper eventStoreWrapper, ISubscriber subscriber)
   {
     _eventStoreWrapper = eventStoreWrapper;
     _subscriber = subscriber;
@@ -26,8 +27,8 @@ public class SubscriptionManager
         await _subscriber.HandleEvent(@event);
         await _subscriber.UpdateCursor(@event);
       },
-      resolveLinkTos: true,
-      cancellationToken: cancellationToken);
+      true,
+      cancellationToken);
   }
 
   public Task StopAsync(CancellationToken cancellationToken)

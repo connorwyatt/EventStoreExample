@@ -8,13 +8,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="MediatR" Version="10.0.1" />
-      <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
+        <PackageReference Include="MediatR" Version="10.0.1" />
+        <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\ConnorWyatt.EventStoreExample.Mongo\ConnorWyatt.EventStoreExample.Mongo.csproj" />
-      <ProjectReference Include="..\ConnorWyatt.EventStoreExample.Shared\ConnorWyatt.EventStoreExample.Shared.csproj" />
+        <ProjectReference Include="..\ConnorWyatt.EventStoreExample.Mongo\ConnorWyatt.EventStoreExample.Mongo.csproj" />
+        <ProjectReference Include="..\ConnorWyatt.EventStoreExample.Shared\ConnorWyatt.EventStoreExample.Shared.csproj" />
     </ItemGroup>
 
 </Project>

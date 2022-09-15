@@ -7,10 +7,7 @@ public class AggregateRepository
 {
   private readonly EventStoreWrapper _eventStoreWrapper;
 
-  public AggregateRepository(EventStoreWrapper eventStoreWrapper)
-  {
-    _eventStoreWrapper = eventStoreWrapper;
-  }
+  public AggregateRepository(EventStoreWrapper eventStoreWrapper) => _eventStoreWrapper = eventStoreWrapper;
 
   public async Task<T> LoadAggregate<T>(string id) where T : Aggregate, new()
   {
@@ -21,7 +18,10 @@ public class AggregateRepository
       streamName,
       StreamPosition.Start);
 
-    var aggregate = new T { Id = id };
+    var aggregate = new T
+    {
+      Id = id,
+    };
 
     if (stream == null)
     {

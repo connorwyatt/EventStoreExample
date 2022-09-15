@@ -5,11 +5,7 @@ namespace ConnorWyatt.EventStoreExample.Shared.Domain;
 
 public abstract class Aggregate
 {
-  public string Id
-  {
-    get => _id ?? throw new InvalidOperationException();
-    init => _id = value;
-  }
+  public string Id { get => _id ?? throw new InvalidOperationException(); init => _id = value; }
 
   private ImmutableArray<EventEnvelope<IEvent>> SavedEvents = ImmutableArray<EventEnvelope<IEvent>>.Empty;
 

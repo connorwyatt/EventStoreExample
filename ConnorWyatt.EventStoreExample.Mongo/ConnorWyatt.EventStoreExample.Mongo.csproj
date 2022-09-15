@@ -8,7 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\ConnorWyatt.EventStoreExample.Shared\ConnorWyatt.EventStoreExample.Shared.csproj" />
+        <ProjectReference Include="..\ConnorWyatt.EventStoreExample.Shared\ConnorWyatt.EventStoreExample.Shared.csproj" />
     </ItemGroup>
 
 </Project>

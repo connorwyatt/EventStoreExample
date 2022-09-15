@@ -8,10 +8,7 @@ public class ProductHandlers : IRequestHandler<AddProduct>, IRequestHandler<Upda
 {
   private readonly AggregateRepository _aggregateRepository;
 
-  public ProductHandlers(AggregateRepository aggregateRepository)
-  {
-    _aggregateRepository = aggregateRepository;
-  }
+  public ProductHandlers(AggregateRepository aggregateRepository) => _aggregateRepository = aggregateRepository;
 
   public async Task<Unit> Handle(AddProduct command, CancellationToken cancellationToken)
   {

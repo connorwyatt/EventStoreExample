@@ -22,8 +22,6 @@ public class EventHandler
     return ((Func<EventEnvelope<T>, Task>)handler).Invoke(eventEnvelope);
   }
 
-  protected bool CanHandleEvent<T>(EventEnvelope<T> eventEnvelope) where T : class, IEvent
-  {
-    return _handlers.ContainsKey(EventUtilities.GetType(eventEnvelope.Event.GetType()));
-  }
+  protected bool CanHandleEvent<T>(EventEnvelope<T> eventEnvelope) where T : class, IEvent =>
+    _handlers.ContainsKey(EventUtilities.GetType(eventEnvelope.Event.GetType()));
 }

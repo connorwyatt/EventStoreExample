@@ -70,7 +70,10 @@ public class ProductsProjection : SubscriberBase
       throw new InvalidOperationException($"Version mismatch, expected {expectedVersion}, saw {product.Version}");
     }
 
-    newProduct = product with { Version = streamPosition };
+    newProduct = product with
+    {
+      Version = streamPosition,
+    };
     return true;
   }
 }
