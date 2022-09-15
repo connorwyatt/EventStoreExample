@@ -1,3 +1,4 @@
+using ConnorWyatt.EventStoreExample.Shared.Events;
 using ConnorWyatt.EventStoreExample.Shared.EventStore;
 using EventStore.Client;
 
@@ -6,18 +7,23 @@ namespace ConnorWyatt.EventStoreExample.Shared.Subscriptions;
 public class SubscriptionManager
 {
   private readonly EventStoreWrapper _eventStoreWrapper;
+  private readonly MongoSubscriptionCursorsRepository _subscriptionCursorsRepository;
   private readonly ISubscriber _subscriber;
   private StreamSubscription? _subscription;
 
-  public SubscriptionManager(EventStoreWrapper eventStoreWrapper, ISubscriber subscriber)
+  public SubscriptionManager(
+    EventStoreWrapper eventStoreWrapper,
+    MongoSubscriptionCursorsRepository subscriptionCursorsRepository,
+    ISubscriber subscriber)
   {
     _eventStoreWrapper = eventStoreWrapper;
+    _subscriptionCursorsRepository = subscriptionCursorsRepository;
     _subscriber = subscriber;
   }
 
   public async Task StartAsync(CancellationToken cancellationToken)
   {
-    var currentStreamPosition = await _subscriber.GetCursor();
+    var currentStreamPosition = await GetCursor();
 
     _subscription = await _eventStoreWrapper.SubscribeToStreamAsync(
       SubscriberUtilities.GetStreamName(_subscriber.GetType()),
@@ -25,7 +31,7 @@ public class SubscriptionManager
       async (_, @event, _) =>
       {
         await _subscriber.HandleEvent(@event);
-        await _subscriber.UpdateCursor(@event);
+        await UpdateCursor(@event);
       },
       true,
       cancellationToken);
@@ -36,5 +42,26 @@ public class SubscriptionManager
     _subscription?.Dispose();
 
     return Task.CompletedTask;
+  }
+
+  private async Task<ulong?> GetCursor()
+  {
+    var subscriberType = _subscriber.GetType();
+
+    var subscriptionCursor = await _subscriptionCursorsRepository.GetSubscriptionCursor(
+      SubscriberUtilities.GetStreamName(subscriberType),
+      SubscriberUtilities.GetSubscriberName(subscriberType));
+
+    return subscriptionCursor?.Position;
+  }
+
+  private async Task UpdateCursor(EventEnvelope<IEvent> @event)
+  {
+    var subscriberType = _subscriber.GetType();
+
+    await _subscriptionCursorsRepository.UpsertSubscriptionCursor(
+      SubscriberUtilities.GetStreamName(subscriberType),
+      SubscriberUtilities.GetSubscriberName(subscriberType),
+      @event.Metadata.AggregatedStreamPosition);
   }
 }

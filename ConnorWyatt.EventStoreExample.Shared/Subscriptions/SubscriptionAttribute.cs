@@ -5,5 +5,11 @@ public class SubscriptionAttribute : Attribute
 {
   public string StreamName { get; }
 
-  public SubscriptionAttribute(string streamName) => StreamName = streamName;
+  public string SubscriberName { get; }
+
+  public SubscriptionAttribute(string streamName, string subscriberName)
+  {
+    StreamName = streamName;
+    SubscriberName = subscriberName;
+  }
 }

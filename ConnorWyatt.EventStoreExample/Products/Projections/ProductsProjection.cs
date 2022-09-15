@@ -5,7 +5,7 @@ using ConnorWyatt.EventStoreExample.Shared.Subscriptions;
 
 namespace ConnorWyatt.EventStoreExample.Products.Projections;
 
-[Subscription("$ce-products")]
+[Subscription("$ce-products", "ProductsProjection")]
 public class ProductsProjection : SubscriberBase
 {
   private readonly MongoProductsRepository _productsRepository;

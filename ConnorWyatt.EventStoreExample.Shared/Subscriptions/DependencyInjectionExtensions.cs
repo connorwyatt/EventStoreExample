@@ -8,5 +8,6 @@ public static class DependencyInjectionExtensions
     services.AddTransient<ISubscriber, T>();
 
   public static IServiceCollection AddSubscriptions(this IServiceCollection services) =>
-    services.AddHostedService<SubscriptionsManager>();
+    services.AddHostedService<SubscriptionsManager>()
+      .AddSingleton<MongoSubscriptionCursorsRepository>();
 }

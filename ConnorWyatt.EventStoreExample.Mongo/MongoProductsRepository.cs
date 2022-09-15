@@ -1,17 +1,17 @@
+using ConnorWyatt.EventStoreExample.Shared.MongoDB;
 using MongoDB.Driver;
 
 namespace ConnorWyatt.EventStoreExample.Mongo;
 
 public class MongoProductsRepository
 {
-  private const string DatabaseName = "db-development";
   private const string CollectionName = "products";
 
   private readonly IMongoCollection<Product> _collection;
 
-  public MongoProductsRepository(IMongoClient mongoClient)
+  public MongoProductsRepository(IMongoClient mongoClient, MongoDBOptions mongoDBOptions)
   {
-    var database = mongoClient.GetDatabase(DatabaseName);
+    var database = mongoClient.GetDatabase(mongoDBOptions.DatabaseName);
     _collection = database.GetCollection<Product>(CollectionName);
   }
 

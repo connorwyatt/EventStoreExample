@@ -5,6 +5,7 @@ using ConnorWyatt.EventStoreExample.Shared.MongoDB;
 using ConnorWyatt.EventStoreExample.Shared.Subscriptions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using NodaTime;
 
 namespace ConnorWyatt.EventStoreExample.Shared;
 
@@ -16,7 +17,11 @@ public static class DependencyInjectionExtensions
     Assembly assembly) =>
     services
       .AddEventStore(configuration)
-      .AddMongoDB(configuration)
+      .AddMongoDB(
+        new MongoDBOptions(
+          configuration.GetConnectionString("MongoDB"),
+          configuration.GetRequiredSection("MongoDB")["DatabaseName"]))
       .AddAggregateRepository(assembly)
-      .AddSubscriptions();
+      .AddSubscriptions()
+      .AddTransient<IClock>(_ => SystemClock.Instance);
 }
