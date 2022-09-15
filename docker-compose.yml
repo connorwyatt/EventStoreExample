@@ -22,20 +22,12 @@ services:
         target: /var/log/eventstore
   mongodb:
     image: mongo:6.0.1
-#    hostname: mongo
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=password
     ports:
       - "27017:27017"
-#    entrypoint: ["/usr/bin/mongod", "--replSet", "rs0", "--bind_ip_all", "--keyFile", "/opt/keyfile/keyfile"]
-#    healthcheck:
-#      test: test $$(echo "rs.initiate({_id:'rs0',members:[{_id:0,host:\"mongo:27017\"}]}).ok || rs.status().ok" | mongo --port 27017 --quiet) -eq 1
-#      interval: 10s
-#      start_period: 30s
     volumes:
-#      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js
-#      - ./mongo-keyfile:/opt/keyfile/keyfile
       - type: volume
         source: mongodb-volume-data
         target: /data/db
